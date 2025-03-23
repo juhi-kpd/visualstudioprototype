@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VisualSite Studio Prototype</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    
+    .screen {
+      display: none;
+      padding: 30px;
+      max-width: 800px;
+      margin: 20px auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      min-height: 500px;
+      position: relative;
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .screen.active {
+      display: block;
+    }
+    
+    .button {
+      background-color: #4285F4;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 10px 5px;
+      font-size: 15px;
+      transition: background-color 0.3s;
+    }
+    
+    .button:hover {
+      background-color: #3367d6;
+    }
+    
+    .button.secondary {
+      background-color: #f1f1f1;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+    
+    .button.secondary:hover {
+      background-color: #e1e1e1;
+    }
+    
+    .header {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      margin-top: 5px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    
+    .content {
+      margin-bottom: 70px;
+    }
+    
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 15px 30px;
+      background-color: #f8f8f8;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 15px;
+      background-color: #f8f8f8;
+      border-bottom: 1px solid #eee;
+      margin: -30px -30px 20px -30px;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .toolbar-btn {
+      margin-left: 10px;
+      padding: 8px 15px;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .toolbar-btn:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .toolbar-btn.active {
+      background-color: #e6e6e6;
+      border-color: #ccc;
+    }
+    
+    .feedback-bar {
+      display: flex;
+      padding: 15px 30px;
+      border-top: 1px solid #eee;
+      background-color: #f8f8f8;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 0 0 8px 8px;
+    }
+    
+    .feedback-input {
+      flex: 1;
+      padding: 12px;
+      margin-right: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .box-container {
+      display: flex;
+      justify-content: space-between;
+      margin: 30px 0;
+    }
+    
+    .box {
+      width: 48%;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      box-sizing: border-box;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .preview-box {
+      border: 1px solid #ddd;
+      padding: 30px;
+      margin: 20px 0;
+      min-height: 250px;
+      border-radius: 8px;
+      background-color: #fafafa;
+    }
+    
+    input, textarea {
+      border: 1px solid #ddd;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .upload-area {
+      border: 1px dashed #ccc;
+      padding: 30px;
+      margin: 15px 0;
+      text-align: center;
+      background-color: #fafafa;
+      border-radius: 4px;
+      color: #666;
+    }
+    
+    .project-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      background-color: #fafafa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      transition: box-shadow 0.3s;
+    }
+    
+    .project-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .project-info {
+      text-align: left;
+    }
+    
+    .project-info h3 {
+      margin: 0 0 5px 0;
+    }
+    
+    .project-info p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Screen 1: AI Planet Homepage -->
+  <div class="screen active" id="screen1">
+    <div class="header">
+      <h1>AI Planet</h1>
+    </div>
+    <div class="content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px;">
+      <div style="margin-bottom: 40px;">
+        <h2 style="margin-bottom: 15px;">Welcome to AI Planet</h2>
+        <p style="font-size: 16px; line-height: 1.5; color: #555; max-width: 600px;">Discover our suite of AI-powered tools to enhance your productivity and streamline your workflow.</p>
+      </div>
+      <div class="button-group" style="margin-top: 20px;">
+        <button class="button secondary">Products</button>
+        <button class="button" onclick="showScreen('screen2')">VisualSite Studio</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Screen 2: VisualSite Studio Overview -->
+  <div class="screen" id="screen2">
+    <div class="header">
+      <h1>VisualSite Studio Overview</h1>
+    </div>
+    <div class="content">
+      <div class="preview-box">
+        <h2>Create Beautiful Websites with AI</h2>
+        <p>VisualSite Studio helps you build professional websites without coding. Upload a design or describe what you want, and our AI will generate a fully functional website for you.</p>
+        <p>Key features include:</p>
+        <ul>
+          <li>AI-powered code generation</li>
+          <li>Drag-and-drop editing</li>
+          <li>Responsive design</li>
+          <li>Easy export options</li>
+        </ul>
+      </div>
+      <div style="text-align: center;">
+        <button class="button" onclick="showScreen('screen3')">Get Started</button>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="button secondary" onclick="showScreen('screen1')">Back</button>
+    </div>
+  </div>
+  
+  <!-- Screen 3: User Authentication -->
+  <div class="screen" id="screen3">
+    <div class="header">
+      <h1>User Authentication</h1>
+    </div>
+    <div class="content">
+      <div class="box-container">
+        <div class="box">
+          <h2>Sign Up</h2>
+          <input type="text" placeholder="Email/Phone">
+          <input type="password" placeholder="Password">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="button secondary">Sign Up with Google</button>
+            <button class="button" onclick="loginMethod = 'signup'; showScreen('screen4')">Sign Up</button>
+          </div>
+        </div>
+        <div class="box">
+          <h2>Log In</h2>
+          <input type="text" placeholder="Email/Phone">
+          <input type="password" placeholder="Password">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="button secondary">Log In with Google</button>
+            <button class="button" onclick="loginMethod = 'login'; showScreen('screen4')">Log In</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="button secondary" onclick="showScreen('screen2')">Back</button>
+    </div>
+  </div>
+  
+  <!-- Screen 4: Product Landing Page -->
+  <div class="screen" id="screen4">
+    <div class="header">
+      <h1>Product Landing Page</h1>
+    </div>
+    <div class="content">
+      <div style="text-align: center; padding: 30px;">
+        <!-- New user welcome message -->
+        <div id="newUserWelcome">
+          <h2>Welcome to VisualSite Studio!</h2>
+          <p>Your journey to creating beautiful websites starts here.</p>
+          <button class="button" onclick="showScreen('screen5')" style="margin-top: 30px;">Create New Project</button>
+        </div>
+        
+        <!-- Existing user projects dashboard -->
+        <div id="existingProjectsContainer" style="display: none;">
+          <h2>Your Projects Dashboard</h2>
+          <p>Continue working on an existing project or create a new one.</p>
+          
+          <div style="max-width: 600px; margin: 30px auto;">
+            <div class="project-card">
+              <div class="project-info">
+                <h3>Project 1</h3>
+                <p>Last edited: Yesterday</p>
+              </div>
+              <button class="button secondary" onclick="showScreen('screen7')">Open</button>
+            </div>
+            
+            <div class="project-card">
+              <div class="project-info">
+                <h3>Project 2</h3>
+                <p>Last edited: 3 days ago</p>
+              </div>
+              <button class="button secondary" onclick="showScreen('screen7')">Open</button>
+            </div>
+          </div>
+          
+          <button class="button" onclick="showScreen('screen5')" style="margin-top: 30px;">Create New Project</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="button secondary" onclick="showScreen('screen3')">Back</button>
+    </div>
+  </div>
+  
+  <!-- Screen 5: Create Your Website -->
+  <div class="screen" id="screen5">
+    <div class="header">
+      <h1>Create Your Website</h1>
+    </div>
+    <div class="content">
+      <div class="box-container">
+        <div class="box">
+          <h2>Upload Design</h2>
+          <div class="upload-area">
+            Upload PNG, JPG, PDF
+          </div>
+          <button class="button" onclick="processAI()">Process Design</button>
+        </div>
+        <div class="box">
+          <h2>Describe Website</h2>
+          <textarea placeholder="Describe your website here..."></textarea>
+          <button class="button" onclick="processAI()">Generate Code</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="button secondary" onclick="showScreen('screen4')">Back</button>
+    </div>
+  </div>
+  
+  <!-- Screen 6: AI Processing -->
+  <div class="screen" id="screen6">
+    <div class="header">
+      <h1>AI Processing</h1>
+    </div>
+    <div class="content" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <h2>Converting to HTML/CSS</h2>
+      <p>Please wait while our AI processes your request...</p>
+      <div style="background-color: #f1f1f1; height: 10px; width: 80%; border-radius: 5px; margin-top: 20px;">
+        <div id="progressBar" style="background-color: #4285F4; height: 100%; width: 0%; border-radius: 5px;"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Screen 7: Website Preview -->
+  <div class="screen" id="screen7">
+    <div class="toolbar">
+      <button class="toolbar-btn" style="background-color: #e6e6e6; border-color: #ccc;">Preview</button>
+      <button class="toolbar-btn">Code</button>
+      <button class="toolbar-btn" onclick="showScreen('screen8')">Edit</button>
+    </div>
+    <div class="content">
+      <a href="#" onclick="showScreen('screen5'); return false;" style="color: #333; text-decoration: none; display: flex; align-items: center; margin-bottom: 20px;">
+        <span style="margin-right: 5px;">←</span> Back
+      </a>
+      
+      <h1 style="text-align: center;">Website Preview</h1>
+      
+      <div class="preview-box">
+        <h2 style="text-align: center;">Your AI-Generated Website</h2>
+        <div style="height: 200px; display: flex; justify-content: center; align-items: center; margin: 20px 0; border: 1px dashed #ccc; background-color: #fafafa;">
+          Website Preview Content
+        </div>
+        <p style="text-align: center;">This is a preview of your website based on your input.</p>
+      </div>
+    </div>
+    <div class="feedback-bar">
+      <input type="text" class="feedback-input" placeholder="Not satisfied? Tell us what to change about the website...">
+      <button class="button" onclick="regenerateWebsite()">Send</button>
+    </div>
+  </div>
+  
+  <!-- Screen 8: Edit Mode -->
+  <div class="screen" id="screen8">
+    <div class="header">
+      <h1>Edit Mode</h1>
+    </div>
+    <div class="content">
+      <div class="preview-box" style="text-align: center;">
+        Website Preview
+      </div>
+      <div class="button-group">
+        <button class="button secondary" style="width: 120px;">Drag and Drop</button>
+        <button class="button secondary" style="width: 140px;">Edit Text Content</button>
+        <button class="button secondary" style="width: 140px;">Customize Styles</button>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="button secondary" onclick="showScreen('screen7')">Back</button>
+      <button class="button" onclick="showScreen('screen9')">Next</button>
+    </div>
+  </div>
+  
+  <!-- Screen 9: Export Options -->
+  <div class="screen" id="screen9">
+    <div class="header">
+      <h1>Export Options</h1>
+    </div>
+    <div class="content">
+      <div style="text-align: center; max-width: 500px; margin: 0 auto;">
+        <h2>Your website is ready!</h2>
+        <p>Choose how you want to export your website:</p>
+        
+        <div class="button-group" style="margin: 40px 0;">
+          <button class="button secondary" style="width: 150px;">Connect to Git</button>
+          <button class="button secondary" style="width: 150px;">Download ZIP</button>
+        </div>
+        
+        <button class="button" onclick="showScreen('screen10')">Finish</button>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="button secondary" onclick="showScreen('screen8')">Back</button>
+    </div>
+  </div>
+  
+  <!-- Screen 10: Final Outcome -->
+  <div class="screen" id="screen10">
+    <div class="header">
+      <h1>Completed!</h1>
+    </div>
+    <div class="content" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <div style="text-align: center; border: 2px solid #34A853; padding: 30px; margin: 20px 0; border-radius: 8px; width: 80%;">
+        <h2>Functional Front-end Website</h2>
+        <p>Ready for Deployment</p>
+      </div>
+      <button class="button" onclick="showScreen('screen4')" style="margin-top: 30px;">Back to Dashboard</button>
+    </div>
+  </div>
+  
+  <script>
+    // Track if user is new or returning
+    let loginMethod = 'signup'; // 'signup' or 'login'
+    
+    // Function to show specific screen
+    function showScreen(screenId) {
+      // Hide all screens
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+      
+      // Show the requested screen
+      document.getElementById(screenId).classList.add('active');
+      
+      // Special handling for different screens
+      if(screenId === 'screen4') {
+        // Show/hide projects based on user type
+        const existingProjectsContainer = document.getElementById('existingProjectsContainer');
+        const newUserWelcome = document.getElementById('newUserWelcome');
+        
+        if(loginMethod === 'signup') {
+          // New user flow - hide existing projects
+          existingProjectsContainer.style.display = 'none';
+          newUserWelcome.style.display = 'block';
+        } else {
+          // Returning user flow - show existing projects
+          existingProjectsContainer.style.display = 'block';
+          newUserWelcome.style.display = 'none';
+        }
+      }
+    }
+    
+    // Function to process AI with progress bar
+    function processAI() {
+      showScreen('screen6');
+      
+      // Simulate processing with progress bar
+      let progress = 0;
+      const progressBar = document.getElementById('progressBar');
+      progressBar.style.width = '0%';
+      
+      const interval = setInterval(() => {
+        progress += 5;
+        progressBar.style.width = `${progress}%`;
+        
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            showScreen('screen7');
+          }, 500);
+        }
+      }, 150);
+    }
+    
+    // Function to regenerate website based on feedback
+    function regenerateWebsite() {
+      const feedbackInput = document.querySelector('.feedback-input');
+      if (feedbackInput.value.trim()) {
+        showScreen('screen6');
+        feedbackInput.value = '';
+        
+        // Simulate reprocessing
+        let progress = 0;
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = '0%';
+        
+        const interval = setInterval(() => {
+          progress += 5;
+          progressBar.style.width = `${progress}%`;
+          
+          if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+              showScreen('screen7');
+            }, 500);
+          }
+        }, 150);
+      }
+    }
+  </script>
+</body>
+</html>
